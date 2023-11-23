@@ -5,39 +5,56 @@ import sys
 import mouse
 import time
 
-
 # Предупреждение
-print("Warning:\nThe script only works for FullHD monitors!\nThe operation of the script depends on the correctness of the data you entered!")
+print("Предупреждение:\n"
+      "Перед использованием, пожалуйста, прочитайте инструкцию в README.md в репозитории по ссыле:\n"
+      "https://github.com/Duriatt/Trading-Script\n")
 
 # Получение номера монитора пользователя
-monitor_number = int(input("Enter the number of the monitor on which Minecraft is running, counting from one, from left to right:\n"))
-# Получение размера интерфейса пользователя в Minecraft
-interface_size = 3 # int(input(""))
+monitor_number = 0
+msg = "Введите номер монитора на котором запущен Minecraft:\n"
+while monitor_number < 1:
+    monitor_number = int(input(msg))
 
-# Координаты кнопки трейда на экране
-cords_trade_button = [680 + (monitor_number - 1) * 1920, 370]
+# Получение размера интерфейса пользователя в Minecraft
+# interface_size = 3  # int(input(""))
+
+# Получение номера торгового слота
+monitor_number = 0
+msg = "Введите номер торгового слота жителя:\n"
+while monitor_number < 1:
+    monitor_number = int(input(msg))
+
+# Координаты кнопкок трейда на экране
+cords_trade_buttons = [680 + (monitor_number - 1) * 1920, 370]
 # Координаты ячейки с подтверждением сделки на экране
 cords_trade_confirmation_cell = [680 + (monitor_number - 1) * 1920, 370]
 
-# Объявление
-print("Ready to go! Press Shift + B to start/stop trading, and Shift + Esc to exit.")
 # Предупреждение
-print("Before you start trading, you should aim at the middle of the lower half of the trap chest!")
+print("Перед тем как начать торговать, вы должны прицелиться в середину нижней половины сундука-ловушки!")
+
+# Декоративная загрузка
+for _ in range(3):
+    print(".", end="")
+    time.sleep(0.8)
+print()
+
+# Объявление
+print("Готово к работе! Нажмите Shift + B, чтобы начать/остановить торговлю, и Shift + Esc для выхода.")
+
 
 # Статус скрипта
 is_works = False
 
 # Главный алгоритм
-while (not (keyboard.is_pressed("Shift") and keyboard.is_pressed("Esc"))):
-	# Запуск или остановки торговли
-	if keyboard.is_pressed("Shift") and keyboard.is_pressed("b"):
-		is_works = not is_works
+while not (keyboard.is_pressed("Shift") and keyboard.is_pressed("Esc")):
+    # Запуск или остановки торговли
+    if keyboard.is_pressed("Shift") and keyboard.is_pressed("b"):
+        is_works = not is_works
 
-	# Основной цикл если скрипт включен
-	if (is_works):
-		print(mouse.get_position())
-
-
+    # Основной цикл если скрипт включен
+    if is_works:
+        print(mouse.get_position())
 
 # # Начало кода, активация АРК-а
 # time.sleep(1)

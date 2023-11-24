@@ -1,10 +1,8 @@
-<div style="display: flex; align-items: end;">
-
-![markdown logo](picture.png)
-# Trading-Script
-<h1 style="margin-left: 10px;">Trading-Script</h1>
-
-</div>
+<h1> <img src="picture.png"
+  width="32"
+  height="32"
+  style="float:left;">
+  Trading-Script
 
 ### Описание и Инструкции:
 _Скрипт для торговли с жителями в Minecraft, разработанный специально для сервера DeoCraft._

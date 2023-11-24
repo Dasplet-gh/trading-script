@@ -119,7 +119,7 @@ if __name__ == "__main__":
     cords_trade_buttons = {}
     for i in range(7):
         diff_cell = BUTTONS_CORDS_DIFF * i
-        cords_trade_buttons[i + 1] = [start_x + CORDS_TRADE_BUTTON_X + diff_cell, CORDS_TRADE_BUTTON_Y]
+        cords_trade_buttons[i + 1] = [start_x + CORDS_TRADE_BUTTON_X, CORDS_TRADE_BUTTON_Y + diff_cell]
 
     # Координаты ячейки с подтверждением сделки на экране
     cords_trade_confirmation_button = [start_x + CORDS_TRADE_CONFIRMATION_CELL_X, CORDS_TRADE_CONFIRMATION_CELL_Y]

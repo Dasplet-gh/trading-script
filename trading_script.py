@@ -5,31 +5,48 @@ import os
 import mouse
 import time
 
+
+# Константы
+FULLHD_X = 1920
+FULLHD_Y = 1080
+
 HOTKEY_EXIT = "Shift+Esc"
-HOTKEY_STOP_OR_START = "Shift+b"
-WAIT_FOR_KEY_SECONDS = 2
+HOTKEY_START_OR_STOP = "Shift+b"
+
+CORDS_TRADE_BUTTON_X = 680
+CORDS_TRADE_BUTTON_Y = 370
+
+BUTTONS_CORDS_DIFF = 50
+
+CORDS_TRADE_CONFIRMATION_CELL_X = 1230
+CORDS_TRADE_CONFIRMATION_CELL_Y = 420
+
 
 """
   * ===================================================== Функции ======================================================
 """
 
+
 # ======== Функция ожидающая остановки скрипта
 def script_exit():
     keyboard.wait(HOTKEY_EXIT)
+    print("- Остановка скрипта")
     os.kill(os.getpid(), signal.SIGINT)
+
 
 # ======== Функция получающая число из ввода, при заданом условии
 def get_number_from_input(condition, error_msg):
-    number = 0
+    number = -10
     # Пока введённое значение не число или не подходит
     while condition(number):
         try:
-            number = int(input())
+            number = float(input())
             if condition(number):
                 raise ValueError
         except ValueError:
-            print(error_msg)
+            print(error_msg, end="")
     return number
+
 
 #  ======== Функция ожидающая нажатие клавиш(и) определённое количество секунд
 def wait_for_key(hotkey, timeout_seconds):
@@ -40,9 +57,11 @@ def wait_for_key(hotkey, timeout_seconds):
             return True
     return False
 
+
 """
   * =================================================== Основной код ===================================================
 """
+
 
 if __name__ == "__main__":
     # Предупреждение
@@ -61,82 +80,123 @@ if __name__ == "__main__":
     print(f"Нажмите {HOTKEY_EXIT} для остановки работы скрипта.\n")
 
     # Получение номера монитора пользователя -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 2
-    print("Введите номер монитора на котором запущен Minecraft:")
-    error_msg = "Требуется ввести целое число от еденицы:"
-    monitor_number = get_number_from_input((lambda x: x < 1), error_msg)
+    print("Введите номер монитора на котором запущен Minecraft: ", end="")
+
+    mn_error_msg = "Требуется ввести целое число от еденицы: "
+    mn_lambda = (lambda x: x < 1)
+    monitor_number = get_number_from_input(mn_lambda, mn_error_msg)
 
     # Получение размера интерфейса пользователя в Minecraft  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 3
-    # print("Введите размер интерфейса в Minecraft:")
-    # error_msg = "Требуется ввести целое число от еденицы до четырёх включительно:"
+    # print("Введите размер интерфейса в Minecraft: ")
+    # error_msg = "Требуется ввести целое число от еденицы до четырёх включительно: "
     # INTERFACE_SIZE = get_number_from_input((lambda x: not (1 <= x <= 7)), error_msg)
 
     # Получение номера торгового слота -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 4
-    print("Введите номер торгового слота жителя:")
-    error_msg = "Требуется ввести целое число от еденицы до семи включительно:"
-    trade_cell_number = get_number_from_input((lambda x: not (1 <= x <= 7)), error_msg)
+    print("Введите номер торгового слота жителя: ", end="")
+
+    tcn_error_msg = "Требуется ввести целое число от еденицы до семи включительно:"
+    tcn_lambda = (lambda x: not (1 <= x <= 7))
+    trade_button_number = get_number_from_input(tcn_lambda, tcn_error_msg)
 
     # Получение количество покупок -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 5
-    print("Введите количество покупок, то сколько раз вы поторгуете с жителем, введите -1 для бесконечной торговли:")
-    error_msg = "Требуется ввести целое число от еденицы, введите -1 для бесконечной торговли:"
-    trade_count = get_number_from_input((lambda x: x < -1 or x == 0), error_msg)
+    print("Введите количество покупок, то сколько раз вы поторгуете, введите -1 для бесконечной торговли: ", end="")
 
-    print(monitor_number, trade_cell_number, trade_count)
+    tc_error_msg = "Требуется ввести целое число от еденицы, введите -1 для бесконечной торговли: "
+    tc_lambda = (lambda x: x < -1 or x == 0)
+    trade_count = get_number_from_input(tc_lambda, tc_error_msg)
 
-    # Координаты -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 6
-    start_x = (monitor_number - 1) * 1920
+    # Получение паузы между покупками  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 6
+    print("Введите паузу между покупками, задаётся в секундах: ", end="")
+
+    dbt_error_msg = "Требуется ввести не отрицательное число: "
+    dbt_lambda = (lambda x: x < 0)
+    delay_between_trading = get_number_from_input(dbt_lambda, dbt_error_msg)
+
+    # Координаты -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 7
+    start_x = (monitor_number - 1) * FULLHD_X
 
     # Координаты кнопкок трейда на экране
     cords_trade_buttons = {}
     for i in range(7):
-        cords_trade_buttons[1] = [start_x + 680, 370]
+        diff_cell = BUTTONS_CORDS_DIFF * i
+        cords_trade_buttons[i + 1] = [start_x + CORDS_TRADE_BUTTON_X + diff_cell, CORDS_TRADE_BUTTON_Y]
 
     # Координаты ячейки с подтверждением сделки на экране
-    cords_trade_confirmation_cell = [start_x + 680, 370]
+    cords_trade_confirmation_button = [start_x + CORDS_TRADE_CONFIRMATION_CELL_X, CORDS_TRADE_CONFIRMATION_CELL_Y]
 
-    # Предупреждение и декоративная загрузка -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 7
+    # Предупреждение и декоративная загрузка -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 8
     print("\nПеред тем как начать торговать, вы должны прицелиться в середину нижней половины сундука-ловушки!\n"
-          "Остановить торговлю можно только в двух секундной паузе между циклами торговли "
-          "(после выхода из меню жителя).\n")
+          "Остановить торговлю можно только в паузе между циклами торговли (после выхода из меню жителя).\n")
 
     for _ in range(3):
         print(".", end="")
-        time.sleep(0.5)
+        time.sleep(0.4)
     print("\n")
 
-    # Прочие переменные  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 8
-
-    # Статус
-    is_works = False
-
-    # Объявление -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 9
-    print(f"Готово к работе! Нажмите {HOTKEY_STOP_OR_START}, чтобы начать/остановить торговлю.")
-
-    # Основной цикл работы скрипта  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 10
+    # Основной цикл работы скрипта -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 9
+    print(f"Готово к работе! Нажмите {HOTKEY_START_OR_STOP}, чтобы начать/остановить торговлю.")
     while True:
+        # Статус
+        is_works = False
         # Количество циклов трейда
+        trade_count = int(trade_count)
         count = trade_count
         while count != 0:
-            # Основной алгоритм если скрипт включен -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 11
+            # Основной алгоритм если скрипт включен -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 10
             if is_works:
+                # Поочерёдное нажатие необходимых кнопок
 
-                print(mouse.get_position())
-                time.sleep(1)
+                mouse.click('right')
+                time.sleep(1.8)
+
+                keyboard.press('w')
+                time.sleep(1.2)
+                keyboard.release('w')
+                time.sleep(0.2)
+
+                mouse.click('right')
+                time.sleep(2)
+
+                keyboard.press('Shift')
+                time.sleep(0.1)
+
+                mouse.move(cords_trade_buttons[trade_button_number][0], cords_trade_buttons[trade_button_number][1])
+                time.sleep(0.1)
+                mouse.click('left')
+                time.sleep(0.1)
+
+                mouse.move(cords_trade_confirmation_button[0], cords_trade_confirmation_button[1])
+                time.sleep(0.1)
+                mouse.click('left')
+                time.sleep(0.1)
+
+                keyboard.release('Shift')
+                time.sleep(0.1)
+
+                keyboard.send('Esc')
+                time.sleep(0.1)
 
                 count -= 1
                 print(f"- Покупка {trade_count - count} выполнена.")
 
-            # Запуск или остановка торговли -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 12
-            if not is_works or wait_for_key(HOTKEY_STOP_OR_START, WAIT_FOR_KEY_SECONDS):
+            # Запуск или остановка торговли -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 11
+            if not is_works or wait_for_key(HOTKEY_START_OR_STOP, delay_between_trading):
                 # Если торговля остановлена, то ожидание её возобновления
                 print("- Ожидание возобновления торговли.")
-                keyboard.wait(HOTKEY_STOP_OR_START)
+                keyboard.wait(HOTKEY_START_OR_STOP)
                 is_works = True
+                time.sleep(0.5)
 
-        # Получение количество покупок  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 13
-        print("Требуемое количество покупок было сделано.\nВведите следующее количество покупок:")
-        error_msg = "Требуется ввести целое число от еденицы, введите -1 для бесконечной торговли:"
-        trade_count = get_number_from_input((lambda x: x < -1 or x == 0), error_msg)
+        # Получение количество покупок  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 12
+        print("Требуемое количество покупок было сделано. Требуются новые данные.")
 
-# keyboard.send('e')
-# mouse.move(cord_num[i][0], cord_num[i][1])
-# mouse.click('left')
+        msg = "Введите 1 если желаете оставить предыдущие настройки, иначе введите что угодно другое: "
+        if input(msg) != "1":
+            print("Введите количество покупок: ", end="")
+            trade_count = get_number_from_input(tc_lambda, tc_error_msg)
+
+            print("Введите номер торгового слота: ", end="")
+            trade_button_number = get_number_from_input(tcn_lambda, tcn_error_msg)
+
+            print("Введите паузу между покупками: ", end="")
+            delay_between_trading = get_number_from_input(dbt_lambda, dbt_error_msg)

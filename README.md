@@ -1,6 +1,7 @@
 <div style="display: flex; align-items: end;">
 
-![](picture.png)
+![markdown logo](picture.png)
+# Trading-Script
 <h1 style="margin-left: 10px;">Trading-Script</h1>
 
 </div>

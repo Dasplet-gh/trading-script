@@ -1,6 +1,7 @@
 <h1> <img src="picture.png"
   width="32"
-  height="32">
+  height="32" 
+  alt="">
   Trading-Script
 </h1> 
 

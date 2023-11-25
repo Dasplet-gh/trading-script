@@ -6,6 +6,7 @@ import mouse
 import time
 import os
 
+
 # Константы
 FULLHD_X = 1920
 FULLHD_Y = 1080

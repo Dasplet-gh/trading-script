@@ -1,6 +1,5 @@
 import threading
 import keyboard
-import win32gui
 import signal
 import mouse
 import time
@@ -17,7 +16,7 @@ HOTKEY_START_OR_STOP = "Shift+b"
 CORDS_TRADE_BUTTON_X = 680
 CORDS_TRADE_BUTTON_Y = 380
 
-BUTTONS_CORDS_DIFF = 70
+BUTTONS_CORDS_DIFF = 60
 
 CORDS_TRADE_CONFIRMATION_CELL_X = 1230
 CORDS_TRADE_CONFIRMATION_CELL_Y = 420
@@ -273,7 +272,7 @@ if __name__ == "__main__":
             # Основной алгоритм если скрипт включен  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 5
             if is_works:
                 # Торговля
-                actions.trade()
+                actions.trade(parameters)
                 # Запись номера и объявление
                 count -= 1
                 print(f"- Покупка {parameters.TradeCount - count} выполнена.")

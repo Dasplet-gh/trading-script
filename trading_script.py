@@ -12,6 +12,7 @@ FULLHD_Y = 1080
 
 HOTKEY_EXIT = "Shift+Esc"
 HOTKEY_START_OR_STOP = "Shift+b"
+HOTKEY_STOP_CYCLE = "Shift+v"
 
 CORDS_TRADE_BUTTON_X = 680
 CORDS_TRADE_BUTTON_Y = 380
@@ -77,7 +78,6 @@ class Parameters(object):
         # Инструкция
         print(
             f"\nВведите число:\n"
-            f"-2 - Вывод значений всех параметров.\n"
             f"-1 - Вывод значений всех параметров.\n"
             f"0 - Завершить изменение параметров.\n"
             f"1 - Изменить {self.MonitorNumberDescription}.\n"
@@ -279,9 +279,18 @@ if __name__ == "__main__":
 
             # Запуск или остановка торговли  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 6
             if not is_works or wait_for_key(HOTKEY_START_OR_STOP, parameters.DelayBetweenTrading):
-                # Если торговля остановлена, то ожидание её возобновления
-                print("- Ожидание возобновления торговли.")
-                keyboard.wait(HOTKEY_START_OR_STOP)
+                # Если торговля остановлена, то ожидание её возобновления или остановки цикла
+                print(f"- Ожидание возобновления торговли. Для остановки цикла торговли нажмите {HOTKEY_STOP_CYCLE}.")
+                # Ожидание нажатия горячих клавиш
+                while True:
+                    event = keyboard.read_event()
+                    if event.event_type == keyboard.KEY_DOWN:
+                        if keyboard.is_pressed(HOTKEY_START_OR_STOP):
+                            break
+                        elif keyboard.is_pressed(HOTKEY_STOP_CYCLE):
+                            count = 0
+                            break
+                # Изменение статуса
                 is_works = True
                 time.sleep(0.5)
 

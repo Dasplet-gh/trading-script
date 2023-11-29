@@ -158,7 +158,7 @@ class Actions(object):
         time.sleep(1.8)
         # Продвижение по воде мимо портала, к жителю
         keyboard.press('w')
-        time.sleep(1.2)
+        time.sleep(1.1)
         keyboard.release('w')
         time.sleep(0.2)
         # Вход в меню жителя

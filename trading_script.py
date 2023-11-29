@@ -120,7 +120,7 @@ class Parameters(object):
                 error_msg = "Требуется ввести не отрицательное число: "
                 self.DelayBetweenTrading = float(self.get_number_from_input((lambda x: x < 0), error_msg))
             else:
-                print("Неизвестная команда.", end="")
+                print("Неизвестная команда.")
             # Считывание команды
             command = input("Введите команду: ")
         print()

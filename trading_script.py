@@ -46,7 +46,7 @@ class Parameters(object):
         self.TradeCount = -1
         self.TradeCountDescription = "количество покупок"
         # Пауза между покупками
-        self.DelayBetweenTrading = 2
+        self.DelayBetweenTrading = 2.0
         self.DelayBetweenTradingDescription = "паузa между покупками"
 
     # Функция получающая число из ввода, при заданом условии
@@ -158,12 +158,12 @@ class Actions(object):
         time.sleep(1.8)
         # Продвижение по воде мимо портала, к жителю
         keyboard.press('w')
-        time.sleep(1.1)
+        time.sleep(1.2)
         keyboard.release('w')
-        time.sleep(0.2)
+        time.sleep(0.15)
         # Вход в меню жителя
         mouse.click('right')
-        time.sleep(2)
+        time.sleep(2.2)
         # Зажатие Shift для автоматических действий
         keyboard.press('Shift')
         time.sleep(0.1)

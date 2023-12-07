@@ -19,6 +19,8 @@ CORDS_TRADE_BUTTON_Y = 380
 
 BUTTONS_CORDS_DIFF = 60
 
+NUMBER_TRADE_BUTTON_ON_MONITOR = 7
+
 CORDS_TRADE_CONFIRMATION_CELL_X = 1230
 CORDS_TRADE_CONFIRMATION_CELL_Y = 420
 
@@ -108,7 +110,7 @@ class Parameters(object):
                 # Получение номера торгового слота
                 print(f"Введите {self.TradeButtonNumberDescription}: ", end="")
                 error_msg = "Требуется ввести целое число от еденицы до семи включительно:"
-                self.TradeButtonNumber = int(self.get_number_from_input((lambda x: not (1 <= x <= 7)), error_msg))
+                self.TradeButtonNumber = int(self.get_number_from_input((lambda x: not (1 <= x <= 14)), error_msg))
             elif command == "4":
                 # Получение количества покупок
                 print(f"Введите {self.TradeCountDescription}, введите -1 для бесконечной торговли: ", end="")
@@ -168,10 +170,18 @@ class Actions(object):
         keyboard.press('Shift')
         time.sleep(0.1)
         # Перемещение мыши и нажатие на кнопку нужного трейда
-        mouse.move(
-            self.cordsTradeButtons[parameters.TradeButtonNumber][0],
-            self.cordsTradeButtons[parameters.TradeButtonNumber][1]
-        )
+        if parameters.TradeButtonNumber > NUMBER_TRADE_BUTTON_ON_MONITOR:
+            mouse.move(
+                self.cordsTradeButtons[NUMBER_TRADE_BUTTON_ON_MONITOR][0],
+                self.cordsTradeButtons[NUMBER_TRADE_BUTTON_ON_MONITOR][1]
+            )
+            time.sleep(0.1)
+            mouse.wheel((parameters.TradeButtonNumber % NUMBER_TRADE_BUTTON_ON_MONITOR) * -1)
+        else:
+            mouse.move(
+                self.cordsTradeButtons[parameters.TradeButtonNumber][0],
+                self.cordsTradeButtons[parameters.TradeButtonNumber][1]
+            )
         time.sleep(0.1)
         mouse.click('left')
         time.sleep(0.1)

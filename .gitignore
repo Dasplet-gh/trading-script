@@ -1,6 +1,6 @@
-# Python
+# - Python -
 __pycache__
 *.py~
 
-# PyCharm
+# - PyCharm -
 .idea/
